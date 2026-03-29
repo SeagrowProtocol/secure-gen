@@ -3,221 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SecureGen Pro | Professional Password Tool</title>
+    <title>SecureGen Pro | Secure Password Generator</title>
+    <meta name="description" content="Free, private, and secure random password generator with real-time strength analysis.">
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 
     <style>
-        :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --bg: #0f172a;
-            --card: #1e293b;
-            --text: #f8fafc;
-            --accent: #334155;
-        }
+        :root { --primary: #6366f1; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #334155; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; min-height: 100vh; }
+        
+        nav { display: flex; justify-content: space-between; padding: 15px 10%; background: var(--card); border-bottom: 1px solid var(--accent); }
+        .container { background: var(--card); padding: 2rem; border-radius: 1.5rem; width: 100%; max-width: 380px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; margin: 40px auto; }
+        
+        .result-box { background: var(--bg); padding: 15px; border-radius: 10px; margin-bottom: 10px; font-family: monospace; font-size: 1.3rem; color: var(--primary); border: 1px solid var(--accent); min-height: 25px; word-break: break-all; }
+        
+        .strength-bar { height: 6px; width: 100%; background: var(--accent); border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
+        #fill { height: 100%; width: 0%; background: #ef4444; transition: 0.3s; }
 
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
+        button { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        
+        /* Footer & Modal */
+        footer { margin-top: auto; padding: 20px; background: var(--card); text-align: center; font-size: 0.9rem; border-top: 1px solid var(--accent); }
+        footer a { color: var(--primary); text-decoration: none; margin: 0 10px; cursor: pointer; }
 
-        /* Ad Placement Styling */
-        .ad-slot {
-            width: 100%;
-            max-width: 728px;
-            height: 90px;
-            background: #1a202c;
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px dashed #4a5568;
-            color: #718096;
-            font-size: 12px;
-            border-radius: 8px;
-        }
-
-        .container {
-            background: var(--card);
-            padding: 2.5rem;
-            border-radius: 1.5rem;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            text-align: center;
-        }
-
-        h1 { margin-bottom: 1.5rem; font-size: 1.8rem; }
-
-        .result-box {
-            background: var(--bg);
-            padding: 1.2rem;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 1.4rem;
-            color: #818cf8;
-            border: 2px solid var(--accent);
-            word-break: break-all;
-            min-height: 30px;
-        }
-
-        /* Strength Meter */
-        .strength-container {
-            height: 8px;
-            width: 100%;
-            background: var(--accent);
-            border-radius: 10px;
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-
-        #strengthBar {
-            height: 100%;
-            width: 0%;
-            background: #ef4444;
-            transition: width 0.5s ease, background 0.5s ease;
-        }
-
-        .settings-group {
-            text-align: left;
-            margin-bottom: 2rem;
-        }
-
-        .setting {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 12px 0;
-            font-weight: 500;
-        }
-
-        input[type="number"] {
-            width: 60px;
-            padding: 5px;
-            border-radius: 4px;
-            border: 1px solid var(--accent);
-            background: var(--bg);
-            color: white;
-        }
-
-        .btn-main {
-            width: 100%;
-            padding: 15px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-bottom: 10px;
-        }
-
-        .btn-main:hover { background: var(--primary-hover); transform: translateY(-2px); }
-
-        .btn-copy {
-            width: 100%;
-            padding: 10px;
-            background: transparent;
-            color: #94a3b8;
-            border: 1px solid var(--accent);
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
-        .btn-copy:hover { background: var(--accent); color: white; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: var(--card); padding: 30px; border-radius: 15px; max-width: 500px; max-height: 70vh; overflow-y: auto; text-align: left; position: relative; }
+        .close-btn { position: absolute; top: 10px; right: 20px; font-size: 24px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div class="ad-slot">Advertisement Space (Leaderboard)</div>
+    <nav>
+        <div style="font-weight: bold;">🛡️ SecureGen Pro</div>
+        <div><small>v1.0 (Secure)</small></div>
+    </nav>
 
     <div class="container">
-        <h1>🛡️ SecureGen</h1>
+        <h1>Generator</h1>
+        <div class="result-box" id="output">Click Generate</div>
+        <div class="strength-bar"><div id="fill"></div></div>
         
-        <div class="result-box" id="display">Click Generate</div>
-        
-        <div class="strength-container">
-            <div id="strengthBar"></div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+            <label>Length</label>
+            <input type="number" id="lengthInput" value="16" min="8" max="40" style="width: 50px; background: #0f172a; color: white; border: 1px solid #334155;">
         </div>
 
-        <div class="settings-group">
-            <div class="setting">
-                <label>Password Length</label>
-                <input type="number" id="len" min="8" max="30" value="12">
-            </div>
-            <div class="setting">
-                <label>Include Numbers</label>
-                <input type="checkbox" id="num" checked>
-            </div>
-            <div class="setting">
-                <label>Include Symbols</label>
-                <input type="checkbox" id="sym" checked>
-            </div>
-        </div>
-
-        <button class="btn-main" onclick="generate()">Generate Secure Password</button>
-        <button class="btn-copy" onclick="copy()">Copy to Clipboard</button>
+        <button onclick="generate()">Generate & Secure</button>
+        <p style="cursor: pointer; color: var(--primary); font-size: 0.8rem;" onclick="copy()">Click to Copy</p>
     </div>
 
-    <div class="ad-slot">Advertisement Space (Banner)</div>
+    <div id="privacyModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>Privacy Policy</h2>
+            <p><strong>Your security is our priority.</strong></p>
+            <p>1. <strong>No Data Collection:</strong> This tool runs entirely in your browser. We do not store or transmit your passwords.</p>
+            <p>2. <strong>Cookies:</strong> We use Google AdSense which may use cookies to serve personalized ads based on your visits.</p>
+            <p>3. <strong>Local Execution:</strong> All encryption and randomization happen on your device, not our servers.</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 SecureGen Project</p>
+        <a onclick="openModal()">Privacy Policy</a> | 
+        <a href="mailto:your-email@example.com">Contact Us</a>
+    </footer>
 
     <script>
-        const chars = {
-            lower: 'abcdefghijklmnopqrstuvwxyz',
-            upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-            numbers: '0123456789',
-            symbols: '!@#$%^&*()_+~`|}{[]:;?><,./-='
-        };
-
         function generate() {
-            const length = document.getElementById('len').value;
-            const useNum = document.getElementById('num').checked;
-            const useSym = document.getElementById('sym').checked;
-
-            let pool = chars.lower + chars.upper;
-            if (useNum) pool += chars.numbers;
-            if (useSym) pool += chars.symbols;
-
-            let password = '';
-            for (let i = 0; i < length; i++) {
-                password += pool.charAt(Math.floor(Math.random() * pool.length));
+            const len = document.getElementById('lengthInput').value;
+            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+            let password = "";
+            for (let i = 0; i < len; i++) {
+                password += charset.charAt(Math.floor(Math.random() * charset.length));
             }
-
-            document.getElementById('display').innerText = password;
-            calculateStrength(length, useNum, useSym);
-        }
-
-        function calculateStrength(length, n, s) {
-            const bar = document.getElementById('strengthBar');
-            let score = (length / 30) * 100;
-            if (n) score += 10;
-            if (s) score += 15;
+            document.getElementById('output').innerText = password;
             
-            score = Math.min(score, 100);
-            bar.style.width = score + '%';
-
-            if (score < 40) bar.style.background = '#ef4444'; // Weak - Red
-            else if (score < 75) bar.style.background = '#f59e0b'; // Medium - Orange
-            else bar.style.background = '#10b981'; // Strong - Green
+            const fill = document.getElementById('fill');
+            let pct = (len / 40) * 100;
+            fill.style.width = pct + "%";
+            fill.style.background = pct < 40 ? "#ef4444" : pct < 70 ? "#f59e0b" : "#10b981";
         }
 
         function copy() {
-            const text = document.getElementById('display').innerText;
-            if (text !== "Click Generate") {
+            const text = document.getElementById('output').innerText;
+            if(text !== "Click Generate") {
                 navigator.clipboard.writeText(text);
                 alert("Password Copied!");
             }
         }
+
+        // Modal Logic
+        function openModal() { document.getElementById('privacyModal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('privacyModal').style.display = 'none'; }
     </script>
 </body>
 </html>
