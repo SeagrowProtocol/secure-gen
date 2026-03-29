@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureGen Pro | Professional Password Tool</title>
+    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --accent: #334155;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Ad Placement Styling */
+        .ad-slot {
+            width: 100%;
+            max-width: 728px;
+            height: 90px;
+            background: #1a202c;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #4a5568;
+            color: #718096;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+
+        .container {
+            background: var(--card);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        h1 { margin-bottom: 1.5rem; font-size: 1.8rem; }
+
+        .result-box {
+            background: var(--bg);
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.4rem;
+            color: #818cf8;
+            border: 2px solid var(--accent);
+            word-break: break-all;
+            min-height: 30px;
+        }
+
+        /* Strength Meter */
+        .strength-container {
+            height: 8px;
+            width: 100%;
+            background: var(--accent);
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        #strengthBar {
+            height: 100%;
+            width: 0%;
+            background: #ef4444;
+            transition: width 0.5s ease, background 0.5s ease;
+        }
+
+        .settings-group {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+
+        .setting {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 12px 0;
+            font-weight: 500;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid var(--accent);
+            background: var(--bg);
+            color: white;
+        }
+
+        .btn-main {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .btn-main:hover { background: var(--primary-hover); transform: translateY(-2px); }
+
+        .btn-copy {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            color: #94a3b8;
+            border: 1px solid var(--accent);
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .btn-copy:hover { background: var(--accent); color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="ad-slot">Advertisement Space (Leaderboard)</div>
+
+    <div class="container">
+        <h1>🛡️ SecureGen</h1>
+        
+        <div class="result-box" id="display">Click Generate</div>
+        
+        <div class="strength-container">
+            <div id="strengthBar"></div>
+        </div>
+
+        <div class="settings-group">
+            <div class="setting">
+                <label>Password Length</label>
+                <input type="number" id="len" min="8" max="30" value="12">
+            </div>
+            <div class="setting">
+                <label>Include Numbers</label>
+                <input type="checkbox" id="num" checked>
+            </div>
+            <div class="setting">
+                <label>Include Symbols</label>
+                <input type="checkbox" id="sym" checked>
+            </div>
+        </div>
+
+        <button class="btn-main" onclick="generate()">Generate Secure Password</button>
+        <button class="btn-copy" onclick="copy()">Copy to Clipboard</button>
+    </div>
+
+    <div class="ad-slot">Advertisement Space (Banner)</div>
+
+    <script>
+        const chars = {
+            lower: 'abcdefghijklmnopqrstuvwxyz',
+            upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            numbers: '0123456789',
+            symbols: '!@#$%^&*()_+~`|}{[]:;?><,./-='
+        };
+
+        function generate() {
+            const length = document.getElementById('len').value;
+            const useNum = document.getElementById('num').checked;
+            const useSym = document.getElementById('sym').checked;
+
+            let pool = chars.lower + chars.upper;
+            if (useNum) pool += chars.numbers;
+            if (useSym) pool += chars.symbols;
+
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                password += pool.charAt(Math.floor(Math.random() * pool.length));
+            }
+
+            document.getElementById('display').innerText = password;
+            calculateStrength(length, useNum, useSym);
+        }
+
+        function calculateStrength(length, n, s) {
+            const bar = document.getElementById('strengthBar');
+            let score = (length / 30) * 100;
+            if (n) score += 10;
+            if (s) score += 15;
+            
+            score = Math.min(score, 100);
+            bar.style.width = score + '%';
+
+            if (score < 40) bar.style.background = '#ef4444'; // Weak - Red
+            else if (score < 75) bar.style.background = '#f59e0b'; // Medium - Orange
+            else bar.style.background = '#10b981'; // Strong - Green
+        }
+
+        function copy() {
+            const text = document.getElementById('display').innerText;
+            if (text !== "Click Generate") {
+                navigator.clipboard.writeText(text);
+                alert("Password Copied!");
+            }
+        }
+    </script>
+</body>
+</html>
