@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+Sitemap: https://seagrowprotocol.github.io/secure-gen/sitemap.xml
+
